@@ -6,6 +6,11 @@ using System.Linq;
 
 namespace Edg3en;
 
+/// <summary>
+/// Content management for Edg3en
+/// Note: Make 'Content/' in Solution; add content in your structure there; make sure 'Copy' enabled in properties
+/// TODO: Work out the better content management bundling system through FNAs content system - we can still load with this, but just need to consider it more
+/// </summary>
 public class Content
 {
     public ContentManager Manager { get; private set; }
