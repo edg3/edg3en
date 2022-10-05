@@ -21,4 +21,6 @@ public abstract class IGameState
     /// </summary>
     /// <returns></returns>
     public abstract bool Update();
+
+    // TODO: Think about it, 'unload' => 'new state added' -> sees it needs load -> it loads so it adds content tracking -> unloads previous state as new state will be shown
 }
