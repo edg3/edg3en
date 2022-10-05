@@ -84,15 +84,19 @@ public class Engine
         SpriteBatch?.Dispose();
     }
 
-    public void LoadContent()
+    public void LoadContent(bool SettingPointerMyself)
     {
         SpriteBatch = new SpriteBatch(_gdm.GraphicsDevice);
 
-        Content.Mouse_Pointer = new Texture2D(_gdm.GraphicsDevice, 1, 1);
-        Rectangle r = new Rectangle(0, 0, 1, 1);
-        Color[] c = new Color[1];
-        c[0] = Color.Red;
-        Content.Mouse_Pointer.SetData<Color>(c, 0, 1);
+        if (!SettingPointerMyself)
+        {
+            // Make a small red pointer dot if we dont set one afterwards
+            Content.Mouse_Pointer = new Texture2D(_gdm.GraphicsDevice, 1, 1);
+            Rectangle r = new Rectangle(0, 0, 1, 1);
+            Color[] c = new Color[1];
+            c[0] = Color.Red;
+            Content.Mouse_Pointer.SetData<Color>(c, 0, 1);
+        }
 
         // Load first gamestate content - maybe?
     }
@@ -147,7 +151,7 @@ public class Engine
         // TODO : Work out 'loading screen state' which can be first state in memory?
         // TODO : Work out 'popup state' to throw in where it updates the popup, draws the current state, and 
         graphicsDevice.Clear(BackgroundColor);
-        SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
+        SpriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
         // Thought: 2D vs 3D? Can I still interweave the 2D like this to show 'in front'?
         if (_states.Count > 0)
@@ -161,7 +165,7 @@ public class Engine
 
         if (Mouse_PointerVisible)
         {
-            SpriteBatch.Draw(Content.Mouse_Pointer, new Rectangle(M_Current.X, M_Current.Y, 2, 2), Color.White);
+            SpriteBatch.Draw(Content.Mouse_Pointer, new Rectangle(M_Current.X, M_Current.Y, Content.Mouse_Pointer.Width, Content.Mouse_Pointer.Height), Color.White);
         }
 
         SpriteBatch.End();
