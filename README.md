@@ -1,6 +1,10 @@
 # edg3en
 Building an Engine wrapper on 'FNA-XNA/FNA'; aim to use Vulkan through it using 'thatcosmonaut/FNA3D'
 
+# Links
+- FNA: https://github.com/FNA-XNA/FNA
+- FNA Wiki: https://github.com/FNA-XNA/FNA/wiki
+
 # Building
 - First version based on needs to build 'Explosive Hamster' (SokoBomber's successor)
 - The game will stay private, but I want to make my own idea of a full Game Engine for things such as GGJ, or games I feel like making
