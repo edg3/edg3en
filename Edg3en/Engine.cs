@@ -79,6 +79,11 @@ public class Engine
         // Get First Game State setup
     }
 
+    ~Engine()
+    {
+        SpriteBatch?.Dispose();
+    }
+
     public void LoadContent()
     {
         SpriteBatch = new SpriteBatch(_gdm.GraphicsDevice);

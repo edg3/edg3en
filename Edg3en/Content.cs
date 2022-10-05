@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,28 @@ public class Content
         return Assets[name] as SpriteFont;
     }
 
+    public SoundEffect GetSoundEffect(string gamestateName, string name)
+    {
+        if (GamestateAssetsPairs.ContainsKey(name))
+        {
+            if (!GamestateAssetsPairs[name].Contains(gamestateName))
+                GamestateAssetsPairs[name].Add(gamestateName);
+        }
+        else
+        {
+            GamestateAssetsPairs.Add(name, new List<string>() { gamestateName });
+        }
+
+        if (Assets.ContainsKey(name))
+        {
+            if (Assets[name] != null)
+                return Assets[name] as SoundEffect;
+        }
+
+        Assets.Add(name, Manager.Load<SpriteFont>(name));
+        return Assets[name] as SoundEffect;
+    }
+
     public void Clean(string gamestateName)
     {
         foreach (var k1 in GamestateAssetsPairs.Keys)
@@ -82,9 +105,19 @@ public class Content
                         case "SpriteFont":
                             /* (removed as SpriteFont).Dispose doesn't exist; might need to do something else */
                             break;
+                        case "SoundEffect":
+                            (removed as SoundEffect).Dispose();
+                            break;
                     }
                 }
             }
         }
+    }
+
+    ~Content()
+    {
+        // Assumed Windows memory management app close will suffice
+        GamestateAssetsPairs.Clear();
+        Assets.Clear();
     }
 }
