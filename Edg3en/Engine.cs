@@ -142,7 +142,7 @@ public class Engine
         // TODO : Work out 'loading screen state' which can be first state in memory?
         // TODO : Work out 'popup state' to throw in where it updates the popup, draws the current state, and 
         graphicsDevice.Clear(BackgroundColor);
-        SpriteBatch.Begin();
+        SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
         // Thought: 2D vs 3D? Can I still interweave the 2D like this to show 'in front'?
         if (_states.Count > 0)
