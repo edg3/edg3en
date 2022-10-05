@@ -34,6 +34,10 @@ public class Engine
     // Mouse Pointer
     public bool Mouse_ShowPointer { get; set; }
 
+    // Mouse locations
+    public int Mouse_X => M_Current.X;
+    public int Mouse_Y => M_Current.Y;
+
     // SpriteBatch
     public SpriteBatch SpriteBatch { get; private set; } = null;
 
@@ -225,6 +229,15 @@ public class Engine
     public void ShowMousePointer()
     {
         Mouse_PointerVisible = true;
+    }
+
+    public bool RectContains(Rectangle rect, int x, int y)
+    {
+        return
+            rect.X <= x &&
+            rect.Y <= y &&
+            rect.X + rect.Width >= x &&
+            rect.Y + rect.Height >= y;
     }
 }
 
