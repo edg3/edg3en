@@ -239,6 +239,11 @@ public class Engine
             rect.X + rect.Width >= x &&
             rect.Y + rect.Height >= y;
     }
+
+    public bool MouseContained(Rectangle target)
+    {
+        return RectContains(target, Mouse_X, Mouse_Y);
+    }
 }
 
 public enum MouseButtons
