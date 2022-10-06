@@ -43,7 +43,7 @@ public class ETexture2D
 
     public void SetTarget(int x, int y)
     {
-        Target = new Rectangle(x, y, Texture.Width, Texture.Height);
+        Target = new Rectangle(x, y, Target.Width, Target.Height);
     }
 
     public void SetTarget(int x, int y, int w, int h)
@@ -53,7 +53,7 @@ public class ETexture2D
 
     public void SetTarget_Hover(int x, int y)
     {
-        Target_Hover = new Rectangle(x, y, Texture.Width, Texture.Height);
+        Target_Hover = new Rectangle(x, y, Target.Width, Target.Height);
     }
 
     public void SetTarget_Hover(int x, int y, int w, int h)
@@ -89,11 +89,11 @@ public class ETexture2D
     public bool InWindow()
     {
         var bounds = Engine.I.Game.GraphicsDevice.PresentationParameters.Bounds;
-        return 
-            Engine.I.RectContains(bounds, Target.X, Target.Y) ||
-            Engine.I.RectContains(bounds, Target.X + Target.Width, Target.Y) ||
-            Engine.I.RectContains(bounds, Target.X, Target.Y + Target.Height) ||
-            Engine.I.RectContains(bounds, Target.X + Target.Width, Target.Y + Target.Height);
+        return
+            bounds.Contains(Target.X, Target.Y) ||
+            bounds.Contains(Target.X + Target.Width, Target.Y) ||
+            bounds.Contains(Target.X, Target.Y + Target.Height) ||
+            bounds.Contains(Target.X + Target.Width, Target.Y + Target.Height);
     }
 
     // TODO: Workout and consider 'offset animations' for 2D 'worlds'
