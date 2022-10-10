@@ -14,7 +14,7 @@ public class ETexture2D
         Target = new Rectangle(0, 0, Texture.Width, Texture.Height);
         Target_Hover = new Rectangle(0, 0, Texture.Width, Texture.Height);
         Color = Color.White;
-        Color = Color.White;
+        Color_Hover = Color.White;
     }
 
     public Rectangle Target { get; set; }
