@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Edg3en;
 
@@ -40,6 +41,9 @@ public class Engine
 
     // SpriteBatch
     public SpriteBatch SpriteBatch { get; private set; } = null;
+
+    // Loading screen
+    public IGameState LoadingState { get; private set; } = null;
 
     // Start with defaults
     public Engine(Game game, GraphicsDeviceManager gdm, ContentManager cm)
@@ -111,13 +115,10 @@ public class Engine
 
     public void UnloadContent()
     {
-        // TODO : Create content management service
-        //         - track EVERY gamestate that isn't destroyed that uses it; if there is no longer a game state that has an item it can remove it from memory
-        //         - Check memory refreshing things to be a cool guy
-        // Clean up all remaining content in memory
-        // TODO : Think about: Unloading 'main menu' assets from memory as a flag on game state then when we go back to it we reload them - less memory use; could be cool and useful
+        if (null != LoadingState) Content.Clean(LoadingState.Name);
     }
 
+    Thread LoadingThread { get; set; } = null;
     public void Update(GameTime gameTime)
     {
         // Input Wrapping
@@ -138,14 +139,29 @@ public class Engine
                 {
                     // This is possibly lazy state - you as a user needs to 
                     _states.Remove(lastState);
-                    // TODO: clean up memory using
-                    // totally_cleaning_memory(lastState.Name);
+                    // TODO: double check logical order of load - I believe this hits before the content starts to 'Load'?
+                    Thread cleanUp = new Thread(() =>
+                    {
+                        Thread.Sleep(1000); /* I believe 1 second should be enough for loading? like, load the reused first? */
+                        Content.Clean(lastState.Name);
+                    });
+                    cleanUp.Start();
                 }
             }
             else
             {
-                // TODO: Loading screen vibes - launch load thread
-                lastState.Load();
+                LoadingState?.Update();
+                if (null == LoadingThread)
+                {
+                    LoadingThread = new Thread(() =>
+                    {
+                        lastState.Load();
+                        var instance = LoadingThread;
+                        LoadingThread = null;
+                        instance.Abort();
+                    });
+                    LoadingThread.Start();
+                }
             }
         }
     }
@@ -156,7 +172,6 @@ public class Engine
         if (null == graphicsDevice) return; /* Hmm... This calls like update when it isn't ready to start */
 
         // Render current state
-        // TODO : Work out 'loading screen state' which can be first state in memory?
         // TODO : Work out 'popup state' to throw in where it updates the popup, draws the current state, and 
         graphicsDevice.Clear(BackgroundColor);
         SpriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
@@ -168,6 +183,10 @@ public class Engine
             if (lastState.Loaded)
             {
                 lastState.Draw();
+            }
+            else
+            {
+                LoadingState?.Draw();
             }
         }
 
@@ -190,8 +209,6 @@ public class Engine
     {
         _states.RemoveAt(_states.Count - 1);
     }
-
-    // TODO: consider - maybe 'remove state named' ?
 
     // TODO: Revisit all input below and double check logic
     public bool IsKeyPressed(Keys k)
@@ -229,7 +246,7 @@ public class Engine
 
     // TODO: Gamepad
 
-    public bool Mouse_PointerVisible { get; set; } = false;
+    public bool Mouse_PointerVisible { get; private set; } = false;
     public void ShowMousePointer()
     {
         Mouse_PointerVisible = true;
@@ -247,6 +264,12 @@ public class Engine
     public bool MouseContained(Rectangle target)
     {
         return RectContains(target, Mouse_X, Mouse_Y);
+    }
+
+    public void SetLoadingState(IGameState loadState)
+    {
+        LoadingState = loadState;
+        loadState.Load();
     }
 }
 
