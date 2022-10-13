@@ -58,6 +58,10 @@ public class Engine
         Game = game;
     }
 
+    // Need to think this through a little - might need a different wrapping
+    public int Window_Width => _gdm.PreferredBackBufferWidth;
+    public int Window_Height => _gdm.PreferredBackBufferHeight;
+
     // Start with specified values
     public Engine(Game game, GraphicsDeviceManager gdm, ContentManager cm, int width, int height, bool fullscreen, bool syncVertical, Color backgroundColor)
     {

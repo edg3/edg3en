@@ -2,6 +2,9 @@
 
 public abstract class IGameState
 {
+    // Cleaning referencing code a little
+    public Engine E => Engine.I;
+
     // Name => 'Menu' => 'content loaded bound to Menu' in 'ContentManager'
     public bool Loaded { get; set; } // Set to true at end of load
     public string Name { get; private set; }
