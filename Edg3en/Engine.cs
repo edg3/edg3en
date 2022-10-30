@@ -221,7 +221,16 @@ public class Engine
         return KB_Current.IsKeyDown(k);
     }
 
-    // TODO: Mouse Scroll
+    public bool IsMouseScrollUp()
+    {
+        return M_Current.ScrollWheelValue > M_Previous.ScrollWheelValue;
+    }
+
+    public bool IsMouseScrolllDown()
+    {
+        return M_Current.ScrollWheelValue < M_Previous.ScrollWheelValue;
+    }
+
     public bool IsMouseClicked(MouseButtons mb)
     {
         switch (mb)
